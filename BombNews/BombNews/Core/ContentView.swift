@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let service: HomeServiceable = HomeService()
     var body: some View {
         VStack {
             Image(systemName: "globe")
