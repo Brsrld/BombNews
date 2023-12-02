@@ -8,21 +8,23 @@
 import Foundation
 @testable import BombNews
 
-final class MockHttpClient: NewsListServiceable, Mockable {
+final class MockHttpClient: NewsListServiceable {
     let filename: String
+    private let service: Mockable
     
-    init(filename: String) {
+    init(filename: String, service: Mockable) {
         self.filename = filename
+        self.service = service
     }
     
     func fetchAllNews() async -> Result<BombNews.NewsResponse, BombNews.RequestError> {
-        return await loadJson(filename: filename,
+        return await service.loadJson(filename: filename,
                               extensionType: .json,
                               responseModel: BombNews.NewsResponse.self)
     }
     
     func fetchSearchedNews(searchText query: String) async -> Result<BombNews.NewsResponse, BombNews.RequestError> {
-        return await loadJson(filename: filename,
+        return await service.loadJson(filename: filename,
                               extensionType: .json,
                               responseModel: BombNews.NewsResponse.self)
     }

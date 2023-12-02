@@ -18,9 +18,7 @@ class NewsListViewModelTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        viewModel = NewsListViewModel()
-        viewModel.service = MockHttpClient(filename: filename)
-        
+        viewModel = NewsListViewModel(service: MockHttpClient(filename: filename, service: Mock()))
     }
     
     override func tearDown() {
@@ -80,14 +78,28 @@ class NewsListViewModelTest: XCTestCase {
         viewModel.search(isOnchange: false)
        wait(for: [expectation.expectation], timeout: 1)
    }
+        //search error caseler yazilacak
     
     func test_localSearch_Success() {
+        viewModel.searchQuery = "a"
+        viewModel.segmentValue = .localSearch
+        viewModel.serviceInitialize()
+        viewModel.search(isOnchange: false)
+        
+       let expectation = expectValue(of: viewModel.$states.eraseToAnyPublisher(),
+                                     expectationDescription: "local search success",
+                                     equals: [{ $0 == .empty}])
+       
+       wait(for: [expectation.expectation], timeout: 2)
+   }
+    
+    func test_localSearch_Error() {
         viewModel.searchQuery = "././././././."
         viewModel.segmentValue = .localSearch
         viewModel.serviceInitialize()
         
        let expectation = expectValue(of: viewModel.$states.eraseToAnyPublisher(),
-                                     expectationDescription: "search success",
+                                     expectationDescription: "local search error",
                                      equals: [{ $0 == .empty}])
         viewModel.search(isOnchange: false)
        wait(for: [expectation.expectation], timeout: 1)
@@ -97,10 +109,22 @@ class NewsListViewModelTest: XCTestCase {
         viewModel.searchQuery = "T"
         viewModel.segmentValue = .deepSearch
        let expectation = expectValue(of: viewModel.$filteredNews.eraseToAnyPublisher(),
-                                     expectationDescription: "search success",
+                                     expectationDescription: "deep search success",
                                      equals: [{ $0.count == 1}])
         viewModel.search(isOnchange: false)
        wait(for: [expectation.expectation], timeout: 1)
+   }
+    
+    func test_deepSearch_Error() {
+        viewModel.searchQuery = ""
+        viewModel.segmentValue = .deepSearch
+        viewModel.search(isOnchange: false)
+        
+       let expectation = expectValue(of: viewModel.$filteredNews.eraseToAnyPublisher(),
+                                     expectationDescription: "deep search error",
+                                     equals: [{ $0.count == 0}])
+      
+       wait(for: [expectation.expectation], timeout: 2)
    }
     
     func test_news_Success() {

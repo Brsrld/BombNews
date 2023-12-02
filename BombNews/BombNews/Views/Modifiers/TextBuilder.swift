@@ -8,6 +8,7 @@
 import SwiftUI
 
 // MARK: - TextBuilder
+///TextBuilder a builder to escape duplicate text features.
 struct TextBuilder: ViewModifier {
 
     let textColor: Color

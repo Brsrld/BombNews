@@ -19,7 +19,7 @@ protocol Mockable: AnyObject {
                                 responseModel: T.Type) async -> Result<T, RequestError>  where T : Decodable
 }
 
-extension Mockable {
+class Mock: Mockable {
     var bundle: Bundle {
         Bundle(for: type(of: self))
     }
@@ -41,3 +41,4 @@ extension Mockable {
         }
     }
 }
+

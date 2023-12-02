@@ -10,7 +10,9 @@ import SwiftUI
 
 // MARK: - View
 extension View {
-    //desc yaz
+    
+    ///OnLoad a function which work one time every render time.
+    ///We can think like viewdidload function in the UIKit.
     func onLoad(perform action: (() -> Void)? = nil) -> some View {
         modifier(ViewDidLoadModifier(perform: action))
     }

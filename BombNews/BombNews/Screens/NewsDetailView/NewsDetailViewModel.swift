@@ -27,12 +27,16 @@ final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
         guard let title = newsDetail.title,
               let desc = newsDetail.description,
               let newsUrl = newsDetail.url,
-              let imageString = newsDetail.urlToImage else { return changeState(.empty)}
+              let imageString = newsDetail.urlToImage else { return changeState(.empty) }
         
         self.newsTitle = title
         self.newsDesc = desc
         self.imageString = imageString
         self.newsUrl = newsUrl
+        
+        if imageString == "" {
+            changeState(.empty)
+        }
     }
     
     func changeNewsType() {

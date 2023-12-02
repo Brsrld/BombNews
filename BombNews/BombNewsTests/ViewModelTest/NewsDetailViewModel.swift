@@ -14,6 +14,8 @@ class NewsDetailViewModelTest: XCTestCase {
     private let defaultExpectation = XCTestExpectation(description: "is default type")
     private let allTypesExpectation = XCTestExpectation(description: "all categories")
     private let newsDetailCheck = XCTestExpectation(description: "news detail check")
+    private let prepareContentsExp = XCTestExpectation(description: "check contents")
+    private let prepareContentsNilExp = XCTestExpectation(description: "check nil contents")
     
     override func setUp() {
         super.setUp()
@@ -39,9 +41,49 @@ class NewsDetailViewModelTest: XCTestCase {
         self.defaultExpectation.fulfill()
     }
     
+    func test_web_Type() {
+        self.viewModel.newsType = .web
+        XCTAssertEqual(self.viewModel.newsType, .web)
+        self.defaultExpectation.fulfill()
+    }
+    
     func test_all_Types() {
         XCTAssertEqual(viewModel.newsTypeArray.last?.title,  "Web")
         self.allTypesExpectation.fulfill()
+    }
+    
+    func test_prepare_contents() {
+        viewModel.prepareContents()
+        XCTAssertNotNil(viewModel.imageString)
+        XCTAssertNotNil(viewModel.newsTitle)
+        XCTAssertNotNil(viewModel.newsDesc)
+        XCTAssertNotNil(viewModel.newsUrl)
+        self.prepareContentsExp.fulfill()
+    }
+    
+    func test_emptyState_Nil_Content() {
+        let mockViewModel = NewsDetailViewModel(newsDetail: Article(source: nil,
+                                                                    author: nil,
+                                                                    title: nil,
+                                                                    description: nil,
+                                                                    url: nil,
+                                                                    urlToImage: nil,
+                                                                    publishedAt: nil,
+                                                                    content: nil))
+        
+        
+        let expectation = expectValue(of: mockViewModel.$states.eraseToAnyPublisher(),
+                                      expectationDescription: "empty states check",
+                                      equals: [{ $0 == .empty}])
+        
+        XCTAssertEqual(mockViewModel.imageString, "")
+        XCTAssertEqual(mockViewModel.newsTitle, "")
+        XCTAssertEqual(mockViewModel.newsDesc, "")
+        XCTAssertEqual(mockViewModel.newsUrl, "")
+        
+        mockViewModel.prepareContents()
+        self.prepareContentsNilExp.fulfill()
+       wait(for: [expectation.expectation], timeout: 2)
     }
     
     func test_states() {
@@ -53,7 +95,8 @@ class NewsDetailViewModelTest: XCTestCase {
     }
     
     func test_check_Content() {
-        XCTAssertEqual(viewModel.newsDetail.title?.isEmpty,  false)
+        viewModel.prepareContents()
+        XCTAssertEqual(viewModel.newsTitle.isEmpty,  false)
         self.newsDetailCheck.fulfill()
     }
 }

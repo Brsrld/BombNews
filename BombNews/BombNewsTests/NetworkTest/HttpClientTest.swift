@@ -9,9 +9,10 @@ import Foundation
 @testable import BombNews
 import XCTest
 
-class HttpClientTest: XCTestCase, Mockable, HTTPClient {
+class HttpClientTest: XCTestCase{
     var urlSession: URLSession!
     var endpoint: Endpoint!
+    var service: HTTPClientProtocol!
     
     let mockString =
     """
@@ -42,6 +43,7 @@ class HttpClientTest: XCTestCase, Mockable, HTTPClient {
         
         urlSession = URLSession(configuration: config)
         endpoint = AllNewsEndpoint()
+        service = HttpClient(urlSession: urlSession)
     }
     
     override func tearDown() {
@@ -71,9 +73,8 @@ class HttpClientTest: XCTestCase, Mockable, HTTPClient {
         let expectation = XCTestExpectation(description: "response")
         
         Task {
-            let result = await sendRequest(endpoint: endpoint,
-                                           responseModel: NewsResponse.self,
-                                           urlSession: urlSession)
+            let result = await service.sendRequest(endpoint: endpoint,
+                                           responseModel: NewsResponse.self)
             switch result {
             case .success(let success):
                 XCTAssertEqual(success.articles?.first?.title,"TinyTesla (TINT): The revolutionary token electrifying the crypto world")
@@ -107,9 +108,8 @@ class HttpClientTest: XCTestCase, Mockable, HTTPClient {
         let expectation = XCTestExpectation(description: "response")
         
         Task {
-            let result = await sendRequest(endpoint: endpoint,
-                                           responseModel: NewsResponse.self,
-                                           urlSession: urlSession)
+            let result = await service.sendRequest(endpoint: endpoint,
+                                           responseModel: NewsResponse.self)
             switch result {
             case .success(_):
                 XCTAssertThrowsError("Fatal Error")
@@ -142,9 +142,8 @@ class HttpClientTest: XCTestCase, Mockable, HTTPClient {
         let expectation = XCTestExpectation(description: "response")
         
         Task {
-            let result = await sendRequest(endpoint: endpoint,
-                                           responseModel: [NewsResponse].self,
-                                           urlSession: urlSession)
+            let result = await service.sendRequest(endpoint: endpoint,
+                                           responseModel: [NewsResponse].self)
             switch result {
             case .success(_):
                 XCTAssertThrowsError("Fatal Error")
@@ -152,6 +151,26 @@ class HttpClientTest: XCTestCase, Mockable, HTTPClient {
                 XCTAssertEqual(RequestError.decode, failure)
                 expectation.fulfill()
             }
+        }
+    }
+    
+    func test_News_InvalidURL() {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = endpoint.scheme
+        urlComponents.host = "endpoint.host.url"
+        urlComponents.path = " endpoint.path.path"
+        urlComponents.queryItems = endpoint.queryItems
+        
+        let expectation = XCTestExpectation(description: "url error")
+        
+        if let url = urlComponents.url {
+            let response = HTTPURLResponse(url: url,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: ["Content-Type": "application/json"])!
+        } else {
+            XCTAssertEqual(urlComponents.url, nil)
+            expectation.fulfill()
         }
     }
 }
