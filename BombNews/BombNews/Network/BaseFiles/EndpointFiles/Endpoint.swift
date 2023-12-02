@@ -20,6 +20,7 @@ protocol Endpoint {
 
 // MARK: - Endpoint Extension
 extension Endpoint {
+    
     var scheme: String {
         return "https"
     }
@@ -39,7 +40,6 @@ extension Endpoint {
     var queryItems: [URLQueryItem]?  {
         return nil
     }
-    
     
     var header: Header {
         return .defaultHeader

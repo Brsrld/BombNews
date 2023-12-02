@@ -8,15 +8,21 @@
 import Foundation
 import SwiftUI
 
-protocol HTTPClient {
-    func sendRequest<T: Decodable>(endpoint: Endpoint, responseModel: T.Type, urlSession: URLSession?) async -> Result<T, RequestError>
+protocol HTTPClientProtocol {
+    func sendRequest<T: Decodable>(endpoint: Endpoint, responseModel: T.Type) async -> Result<T, RequestError>
 }
 
-extension HTTPClient {
+class HttpClient: HTTPClientProtocol {
+    
+    private var urlSession: URLSession?
+    
+    init(urlSession: URLSession? = URLSession.shared) {
+        self.urlSession = urlSession
+    }
+    
     func sendRequest<T: Decodable>(
         endpoint: Endpoint,
-        responseModel: T.Type,
-        urlSession: URLSession? = nil
+        responseModel: T.Type
     ) async -> Result<T, RequestError> {
         
         var urlComponents = URLComponents()
@@ -48,11 +54,7 @@ extension HTTPClient {
         do {
             var dataAndResponse: (Data, URLResponse)?
             
-            if let session = urlSession {
-                dataAndResponse = try await session.data(for: request)
-            } else {
-                dataAndResponse = try await URLSession.shared.data(for: request, delegate: nil)
-            }
+            dataAndResponse = try await urlSession?.data(for: request)
             
             guard let response = dataAndResponse?.1 as? HTTPURLResponse else {
                 return .failure(.noResponse)
@@ -80,4 +82,3 @@ extension HTTPClient {
         }
     }
 }
-

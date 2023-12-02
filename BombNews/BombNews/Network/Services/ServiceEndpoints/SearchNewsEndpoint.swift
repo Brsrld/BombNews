@@ -9,6 +9,11 @@ import Foundation
 
 // MARK: - SearchNewsEndpoint
 struct SearchNewsEndpoint: Endpoint {
+    
+    private enum Constant {
+        static let querySymbol: String = "q"
+   }
+    
     var searchText: String
     
     var path: Path {
@@ -16,6 +21,6 @@ struct SearchNewsEndpoint: Endpoint {
     }
     
     var queryItems: [URLQueryItem]? {
-        return [URLQueryItem(name: "q", value: searchText)]
+        return [URLQueryItem(name: Constant.querySymbol, value: searchText)]
     }
 }

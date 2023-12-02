@@ -9,21 +9,22 @@ import Foundation
 
 // MARK: - NewsListViewModel
 final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
-    var service: NewsListServiceable
-    private var allNews: [Article]
     
-    @Published private(set) var filteredNews: [Article]
-    @Published var searchQuery: String
-    @Published var segmentValue: Segments
-    private(set) var segmentArray: [Segments]
+    private enum Constant {
+        static let alertMessage: String = "Search string not valid"
+        static let nilValue: String = ""
+    }
     
-    override init() {
-        self.service = NewsListService()
-        self.allNews = []
-        self.filteredNews = []
-        self.searchQuery = ""
-        self.segmentValue = .localSearch
-        self.segmentArray = Segments.allCases
+    private var service: NewsListServiceable?
+    private var allNews: [Article] = []
+    
+    @Published private(set) var filteredNews: [Article] = []
+    @Published var searchQuery: String = Constant.nilValue
+    @Published var segmentValue: Segments = .localSearch
+    private(set) var segmentArray: [Segments] = Segments.allCases
+    
+    init(service: NewsListServiceable = NewsListService(service: HttpClient())) {
+        self.service = service
     }
     
     func serviceInitialize() {
@@ -33,12 +34,28 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
     func search(isOnchange: Bool) {
         switch segmentValue {
         case .deepSearch:
-            if !isOnchange{
+            if !isOnchange {
                 checkValidation()
             }
         case .localSearch:
             filterData()
         }
+    }
+    
+    func prepareCellUIModel(model: Article) -> NewsCellUIModel {
+        guard let imageString = model.urlToImage,
+              let owner = model.source?.name,
+              let title = model.title,
+              let date = model.publishedAt else { return NewsCellUIModel(imageUrl: Constant.nilValue,
+                                                                         owner: Constant.nilValue,
+                                                                         title: Constant.nilValue,
+                                                                         date: Constant.nilValue)}
+        
+        return NewsCellUIModel(imageUrl: imageString,
+                               owner: owner,
+                               title:  title,
+                               date: date.calculateTime())
+        
     }
     
     private func filterData() {
@@ -53,7 +70,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
     private func checkValidation() {
         if searchQuery.isValid() {
             changeState(.error)
-            self.alertMessage = "Search string not valid"
+            self.alertMessage = Constant.alertMessage
             self.showAlert.toggle()
         } else {
             fetchSearchedNews()
@@ -64,7 +81,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
         changeState(.loading)
         Task { [weak self] in
             guard let self = self else { return }
-            let result = await self.service.fetchAllNews()
+            let result = await self.service?.fetchAllNews()
             self.changeState(.finished)
             switch result {
             case .success(let success):
@@ -78,6 +95,8 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
                 self.changeState(.error)
                 self.showAlert.toggle()
                 self.alertMessage = failure.customMessage
+            case .none:
+                fatalError()
             }
         }
     }
@@ -86,7 +105,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
         changeState(.loading)
         Task { [weak self] in
             guard let self = self else { return }
-            let result = await self.service.fetchSearchedNews(searchText: searchQuery)
+            let result = await self.service?.fetchSearchedNews(searchText: searchQuery)
             self.changeState(.finished)
             switch result {
             case .success(let success):
@@ -100,6 +119,8 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
                 self.changeState(.error)
                 self.showAlert.toggle()
                 self.alertMessage = failure.customMessage
+            case .none:
+                fatalError()
             }
         }
     }

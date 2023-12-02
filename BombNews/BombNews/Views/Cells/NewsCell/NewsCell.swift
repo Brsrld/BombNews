@@ -10,25 +10,32 @@ import SwiftUI
 // MARK: - NewsCell
 struct NewsCell: View {
     
-    let item: NewsCellItem
-    @State var isEmpty = false
+    private enum Constant {
+        static let bodyCornerRadius: CGFloat = 8
+        static let bodyShadowRadius: CGFloat = 5
+        static let bodySpacing: CGFloat = 12
+        static let zeroValue: CGFloat = 0
+        static let imageHeight: CGFloat = UIScreen.screenHeight / 8
+    }
     
-    init(item: NewsCellItem) {
+    private let item: NewsCellUIModel
+    @State private var isEmpty = false
+    
+    init(item: NewsCellUIModel) {
         self.item = item
     }
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Constant.bodySpacing) {
             movieImage()
             textViews()
         }
         .background(Color.cellColor)
-        .cornerRadius(8)
+        .cornerRadius(Constant.bodyCornerRadius)
         .padding(.horizontal)
-        .shadow(radius: 5)
+        .shadow(radius: Constant.bodyShadowRadius)
     }
     
-    @ViewBuilder
     private func textViews() -> some View {
         HStack {
             VStack {
@@ -46,7 +53,6 @@ struct NewsCell: View {
         }
     }
     
-    @ViewBuilder
     private func label(text: String, color: Color, footNote: Font) -> some View {
         HStack {
             Text(text)
@@ -61,32 +67,33 @@ struct NewsCell: View {
     
     @ViewBuilder
     private func movieImage() -> some View {
-        if let url = URL(string: item.imageUrl) {
-            VStack {
-                CacheAsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image
-                            .resizable()
-                    case .failure(_):
-                       EmptyView()
-                            .task {
-                                isEmpty.toggle()
-                            }
-                    @unknown default:
-                        fatalError()
-                    }
+        VStack {
+            CacheAsyncImage(urlString: item.imageUrl) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                case .failure(_):
+                   EmptyView()
+                        .task {
+                            isEmpty.toggle()
+                        }
+                @unknown default:
+                    fatalError()
                 }
             }
-            .frame(height: isEmpty ? 0 : UIScreen.screenHeight / 8)
         }
+        .frame(height: imageFrame())
+    }
+    
+    private func imageFrame() -> CGFloat {
+        return isEmpty ? Constant.zeroValue : Constant.imageHeight
     }
 }
 
 #Preview {
-    NewsCell(item: NewsCellItem(imageUrl: "https://www.reuters.com/resizer/-9uubUtwVpA0QW9zWGHoxPLwhBk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/PW5QFB7KPVL4HLO3EMDE3LUJFM.jpg",
+    NewsCell(item: NewsCellUIModel(imageUrl: "https://www.reuters.com/resizer/-9uubUtwVpA0QW9zWGHoxPLwhBk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/PW5QFB7KPVL4HLO3EMDE3LUJFM.jpg",
                                 owner: "Reuters",
                                 title: "French government rejects union demand to rethink pension bill - Reuters",
                                 date: "2023-03-28T12:20:00Z".calculateTime()))

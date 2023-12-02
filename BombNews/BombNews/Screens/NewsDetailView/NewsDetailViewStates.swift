@@ -11,4 +11,5 @@ import Foundation
 enum NewsDetailViewStates: ViewStateProtocol {
     case ready
     case web
+    case empty
 }

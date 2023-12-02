@@ -9,6 +9,23 @@ import SwiftUI
 
 // MARK: - NewsListView
 struct NewsListView: View {
+    
+    private enum Constant {
+        static let navigationTitle: String = "News List"
+        static let searchBarPlaceholder: String = "Find or search news"
+        static let emptyImageSystemImage: String  = "exclamationmark.circle"
+        static let progressViewText: String = "Loading"
+        static let errorTitle: String = "No Results"
+        static let errorDesc: String = "There is no news. You can use web search or refresh the page."
+        static let viewsPadding: CGFloat = 8
+        static let newsListSpacing: CGFloat = 12
+        static let segmentedWidth: CGFloat = UIScreen.screenWidth / 1.5
+        static let segmentedString: String = ""
+        static let phoneScreenWidth: CGFloat = 431
+        static let twoColumns: Int = 2
+        static let threeColumns: Int = 3
+    }
+    
     @ObservedObject private var viewModel: NewsListViewModel
     
     init() {
@@ -20,13 +37,13 @@ struct NewsListView: View {
             content()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("News List")
+        .navigationTitle(Constant.navigationTitle)
         .onLoad {
             viewModel.serviceInitialize()
         }
         .searchable(text: $viewModel.searchQuery,
                     placement: .toolbar,
-                    prompt: "Find or search news")
+                    prompt: Constant.searchBarPlaceholder)
         .onSubmit(of: .search) {
             viewModel.search(isOnchange: false)
         }
@@ -37,16 +54,16 @@ struct NewsListView: View {
         VStack {
             switch viewModel.states {
             case .ready:
-                ProgressView("Loading")
+                ProgressView(Constant.progressViewText)
             case .loading:
-                ProgressView("Loading")
+                ProgressView(Constant.progressViewText)
             case .finished:
                 segmentedControl()
                 newsList()
             case .error:
-                ContentUnavailableView("No Results",
-                                       systemImage: "exclamationmark.circle",
-                                       description: Text("There is no news. You can use web search or refresh the page."))
+                ContentUnavailableView(Constant.errorTitle,
+                                       systemImage: Constant.emptyImageSystemImage,
+                                       description: Text(Constant.errorDesc))
             case .empty:
                 ContentUnavailableView.search
                     .onChange(of: viewModel.searchQuery) {
@@ -56,39 +73,38 @@ struct NewsListView: View {
         }
     }
     
-    @ViewBuilder
     private func segmentedControl() -> some View {
         VStack {
-            Picker("", selection: $viewModel.segmentValue) {
+            Picker(Constant.segmentedString, selection: $viewModel.segmentValue) {
                 ForEach(viewModel.segmentArray, id: \.self) {
                     Text($0.title)
                 }
             }
             .pickerStyle(.segmented)
-            .frame(width: UIScreen.screenWidth / 1.5)
-            .padding(.bottom, 8)
+            .frame(width: Constant.segmentedWidth)
+            .padding(.bottom, Constant.viewsPadding)
             .onChange(of: viewModel.searchQuery) {
                 viewModel.search(isOnchange: true)
             }
         }
     }
     
-    @ViewBuilder
     private func newsList() -> some View {
         StaggeredGrid(list: viewModel.filteredNews,
-                      columns: UIScreen.screenWidth > 431.0 ? 3 : 2,
+                      columns: calculateColumns(),
                       showsIndicator: false,
-                      spacing: 12) { news in
+                      spacing: Constant.newsListSpacing) { news in
             NavigationLink {
                 LazyView(NewsDetailView(newsDetail: news))
             } label: {
-                NewsCell(item: NewsCellItem(imageUrl: news.urlToImage ?? "",
-                                            owner: news.source?.name ?? "",
-                                            title: news.title ?? "",
-                                            date: news.publishedAt?.calculateTime() ?? ""))
+                NewsCell(item: viewModel.prepareCellUIModel(model: news))
             }
         }
-                      .padding(.top, 8)
+                      .padding(.top, Constant.viewsPadding)
+    }
+    
+    private func calculateColumns() -> Int {
+        return UIScreen.screenWidth > Constant.phoneScreenWidth ? Constant.threeColumns : Constant.twoColumns
     }
 }
 

@@ -16,10 +16,7 @@ struct NewsResponse: Codable {
 
 // MARK: - Article
 struct Article: Codable, Hashable {
-    static func == (lhs: Article, rhs: Article) -> Bool {
-        return lhs.title == rhs.title
-    }
-    
+    var id: String? = UUID().uuidString
     let source: Source?
     let author: String?
     let title, description: String?

@@ -10,14 +10,29 @@ import Foundation
 // MARK: - NewsDetailViewModel
 final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
     
-    var newsDetail: Article
-    @Published var newsType: NewsDetailTypes
-    private(set) var newsTypeArray: [NewsDetailTypes]
+    private var newsDetail: Article
+    @Published var newsType: NewsDetailTypes  = .reader
+    
+    private(set) var newsTypeArray: [NewsDetailTypes] = NewsDetailTypes.allCases
+    private(set) var imageString: String = ""
+    private(set) var newsTitle: String = ""
+    private(set) var newsDesc: String = ""
+    private(set) var newsUrl: String = ""
     
     init(newsDetail: Article) {
         self.newsDetail = newsDetail
-        self.newsType = .reader
-        self.newsTypeArray = NewsDetailTypes.allCases
+    }
+    
+    func prepareContents() {
+        guard let title = newsDetail.title,
+              let desc = newsDetail.description,
+              let newsUrl = newsDetail.url,
+              let imageString = newsDetail.urlToImage else { return changeState(.empty)}
+        
+        self.newsTitle = title
+        self.newsDesc = desc
+        self.imageString = imageString
+        self.newsUrl = newsUrl
     }
     
     func changeNewsType() {

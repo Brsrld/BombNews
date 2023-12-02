@@ -38,7 +38,7 @@ struct WebView: UIViewRepresentable {
 }
 
 // MARK: - WebViewCoordinator
-class WebViewCoordinator: NSObject, WKNavigationDelegate {
+final class WebViewCoordinator: NSObject, WKNavigationDelegate {
     
     var didStart: () -> Void
     var didFinish: () -> Void

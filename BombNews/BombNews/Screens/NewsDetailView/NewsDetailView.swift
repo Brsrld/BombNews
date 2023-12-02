@@ -10,6 +10,16 @@ import SwiftUI
 // MARK: - NewsDetailView
 struct NewsDetailView: View {
     
+    private enum Constant {
+        static let progressViewText: String = "Loading"
+        static let emptyImageTitle: String = "Article does not have a image"
+        static let emptyImageSystemImage: String  = "exclamationmark.circle"
+        static let readerSpacing: CGFloat = 12
+        static let segmentedSpacing: CGFloat = 8
+        static let segmentedWidth: CGFloat = UIScreen.screenWidth / 1.5
+        static let segmentedString: String = ""
+    }
+    
     @ObservedObject private var viewModel: NewsDetailViewModel
     @State var isloading = false
     
@@ -21,7 +31,10 @@ struct NewsDetailView: View {
         BaseView(viewModel: viewModel) {
             content()
         }
-        .navigationTitle(viewModel.newsDetail.source?.name ?? "")
+        .onLoad{
+            viewModel.prepareContents()
+        }
+        .navigationTitle(viewModel.newsTitle)
     }
     
     @ViewBuilder
@@ -33,83 +46,73 @@ struct NewsDetailView: View {
                 reader()
             case .web:
                 segmentedControl()
-                WebView(url: viewModel.newsDetail.url,
+                WebView(url: viewModel.newsUrl,
                         showLoading: $isloading)
-                .overlay(isloading ? ProgressView("Loading").toAnyView() : EmptyView().toAnyView())
+                .overlay(isloading ? ProgressView(Constant.progressViewText).toAnyView() : EmptyView().toAnyView())
+            case .empty:
+                ContentUnavailableView(Constant.emptyImageTitle,
+                                       systemImage: Constant.emptyImageSystemImage)
             }
         }
     }
     
     @ViewBuilder
     private func newsImage() -> some View {
-        if let string = viewModel.newsDetail.urlToImage
-            ,let url = URL(string: string) {
-            
-            CacheAsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .frame(height: UIScreen.screenHeight > 933 ?
-                               UIScreen.screenHeight / 3 :
-                                UIScreen.screenHeight / 4)
-                        .scaledToFit()
-                case .failure(_):
-                   EmptyView()
-                @unknown default:
-                    fatalError()
-                }
+        CacheAsyncImage(urlString: viewModel.imageString) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
+            case .success(let image):
+                image
+                    .frame(height: calculateHeight())
+                    .scaledToFit()
+            case .failure(_):
+                EmptyView()
+            @unknown default:
+                fatalError()
             }
-        } else {
-            ContentUnavailableView("Article does not have a image",
-                                   systemImage: "exclamationmark.circle")
         }
+    }
+    
+    private func calculateHeight() -> CGFloat {
+        return UIScreen.screenHeight > 933 ?
+        UIScreen.screenHeight / 3 :
+        UIScreen.screenHeight / 4
     }
     
     @ViewBuilder
     private func labels() -> some View {
-        if let title = viewModel.newsDetail.title
-            ,let desc = viewModel.newsDetail.description {
-            
-            Text(title)
-                .modifier(TextBuilder(textColor: .textColor,
-                                      textFont: .title3,
-                                      alingment: .center))
-            Text(desc)
-                .modifier(TextBuilder(textColor: .textColor,
-                                      textFont: .subheadline,
-                                      alingment: .leading))
-                .padding(.horizontal, 8)
-        } else {
-            ContentUnavailableView("Article does not have a content",
-                                   systemImage: "exclamationmark.circle")
-        }
+        Text(viewModel.newsTitle)
+            .modifier(TextBuilder(textColor: .textColor,
+                                  textFont: .title3,
+                                  alingment: .center))
+        Text(viewModel.newsDesc)
+            .modifier(TextBuilder(textColor: .textColor,
+                                  textFont: .subheadline,
+                                  alingment: .leading))
+            .padding(.horizontal, 8)
     }
     
-    @ViewBuilder
     private func reader() -> some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
-               newsImage()
-               labels()
+            LazyVStack(spacing: Constant.readerSpacing) {
+                newsImage()
+                labels()
             }
             .padding(.bottom)
         }
     }
     
-    @ViewBuilder
     private func segmentedControl() -> some View {
         VStack {
-            Picker("", selection: $viewModel.newsType) {
+            Picker(Constant.segmentedString, selection: $viewModel.newsType) {
                 ForEach(viewModel.newsTypeArray, id: \.self) {
                     Text($0.title)
                 }
             }
             .pickerStyle(.segmented)
-            .frame(width: UIScreen.screenWidth / 1.5)
-            .padding(.bottom, 8)
+            .frame(width: Constant.segmentedWidth)
+            .padding(.bottom, Constant.segmentedSpacing)
             .onChange(of: viewModel.newsType) {
                 viewModel.changeNewsType()
             }
@@ -119,8 +122,8 @@ struct NewsDetailView: View {
 
 #Preview {
     NewsDetailView(newsDetail: Article(source: nil,
-                                       author: "Fatih Altayli",
-                                       title: "Terim Fonu",
+                                       author: nil,
+                                       title: nil,
                                        description: nil,
                                        url: nil,
                                        urlToImage: nil,
