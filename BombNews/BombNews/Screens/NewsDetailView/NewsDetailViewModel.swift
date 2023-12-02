@@ -22,4 +22,8 @@ final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
     func changeNewsType() {
         changeState(newsType == .web ? .web : .ready)
     }
+    
+    func emptyState() {
+        changeState(.empty)
+    }
 }

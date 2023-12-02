@@ -35,6 +35,8 @@ struct NewsDetailView: View {
                 WebView(url: viewModel.newsDetail.url,
                         showLoading: $isloading)
                 .overlay(isloading ? ProgressView("Loading").toAnyView() : EmptyView().toAnyView())
+            case .empty:
+                ContentUnavailableView("Article does not have content", systemImage: "exclamationmark.circle")
             }
         }
     }
@@ -51,13 +53,19 @@ struct NewsDetailView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .frame(height: UIScreen.screenHeight / 4)
+                        .frame(height: UIScreen.screenHeight > 933 ?
+                               UIScreen.screenHeight / 3 :
+                                UIScreen.screenHeight / 4)
+                        .scaledToFit()
                 case .failure(_):
                    EmptyView()
                 @unknown default:
                     fatalError()
                 }
             }
+        } else {
+            ContentUnavailableView("Article does not have a image",
+                                   systemImage: "exclamationmark.circle")
         }
     }
     
@@ -75,6 +83,9 @@ struct NewsDetailView: View {
                                       textFont: .subheadline,
                                       alingment: .leading))
                 .padding(.horizontal, 8)
+        } else {
+            ContentUnavailableView("Article does not have a content",
+                                   systemImage: "exclamationmark.circle")
         }
     }
     

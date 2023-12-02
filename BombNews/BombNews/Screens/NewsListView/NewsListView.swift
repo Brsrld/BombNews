@@ -41,7 +41,7 @@ struct NewsListView: View {
         VStack {
             switch viewModel.states {
             case .ready:
-                EmptyView()
+                ProgressView("Loading")
             case .loading:
                 ProgressView("Loading")
             case .finished:
