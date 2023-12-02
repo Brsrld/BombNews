@@ -31,10 +31,7 @@ struct NewsDetailView: View {
         BaseView(viewModel: viewModel) {
             content()
         }
-        .onLoad{
-            viewModel.prepareContents()
-        }
-        .navigationTitle(viewModel.newsTitle)
+        .navigationTitle(viewModel.source)
     }
     
     @ViewBuilder
@@ -64,6 +61,7 @@ struct NewsDetailView: View {
                 ProgressView()
             case .success(let image):
                 image
+                    .resizable()
                     .frame(height: calculateHeight())
                     .scaledToFit()
             case .failure(_):

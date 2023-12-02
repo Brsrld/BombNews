@@ -18,25 +18,26 @@ final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
     private(set) var newsTitle: String = ""
     private(set) var newsDesc: String = ""
     private(set) var newsUrl: String = ""
+    private(set) var source: String = ""
     
     init(newsDetail: Article) {
         self.newsDetail = newsDetail
+        super.init()
+        self.prepareContents()
     }
     
     func prepareContents() {
         guard let title = newsDetail.title,
               let desc = newsDetail.description,
               let newsUrl = newsDetail.url,
-              let imageString = newsDetail.urlToImage else { return changeState(.empty) }
+              let imageString = newsDetail.urlToImage,
+              let source = newsDetail.source?.name else { return changeState(.empty) }
         
         self.newsTitle = title
         self.newsDesc = desc
         self.imageString = imageString
         self.newsUrl = newsUrl
-        
-        if imageString == "" {
-            changeState(.empty)
-        }
+        self.source = source
     }
     
     func changeNewsType() {

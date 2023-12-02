@@ -19,7 +19,6 @@ struct NewsCell: View {
     }
     
     private let item: NewsCellUIModel
-    @State private var isEmpty = false
     
     init(item: NewsCellUIModel) {
         self.item = item
@@ -39,14 +38,14 @@ struct NewsCell: View {
     private func textViews() -> some View {
         HStack {
             VStack {
-                label(text: item.owner, 
+                label(text: item.owner,
                       color: .gray,
                       footNote: .footnote)
                 label(text: item.title,
                       color: .textColor,
                       footNote: .subheadline)
-                label(text: item.date, 
-                      color: .gray, 
+                label(text: item.date,
+                      color: .gray,
                       footNote: .footnote)
             }
             Spacer()
@@ -74,27 +73,21 @@ struct NewsCell: View {
                     ProgressView()
                 case .success(let image):
                     image
+                        .resizable()
                 case .failure(_):
-                   EmptyView()
-                        .task {
-                            isEmpty.toggle()
-                        }
+                    EmptyView()
                 @unknown default:
                     fatalError()
                 }
             }
         }
-        .frame(height: imageFrame())
-    }
-    
-    private func imageFrame() -> CGFloat {
-        return isEmpty ? Constant.zeroValue : Constant.imageHeight
+        .frame(height: item.imageUrl.isEmpty ? 0 : 100)
     }
 }
 
 #Preview {
     NewsCell(item: NewsCellUIModel(imageUrl: "https://www.reuters.com/resizer/-9uubUtwVpA0QW9zWGHoxPLwhBk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/PW5QFB7KPVL4HLO3EMDE3LUJFM.jpg",
-                                owner: "Reuters",
-                                title: "French government rejects union demand to rethink pension bill - Reuters",
-                                date: "2023-03-28T12:20:00Z".calculateTime()))
+                                   owner: "Reuters",
+                                   title: "French government rejects union demand to rethink pension bill - Reuters",
+                                   date: "2023-03-28T12:20:00Z".calculateTime()))
 }

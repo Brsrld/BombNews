@@ -58,6 +58,7 @@ class NewsDetailViewModelTest: XCTestCase {
         XCTAssertNotNil(viewModel.newsTitle)
         XCTAssertNotNil(viewModel.newsDesc)
         XCTAssertNotNil(viewModel.newsUrl)
+        XCTAssertNotNil(viewModel.source)
         self.prepareContentsExp.fulfill()
     }
     
@@ -80,6 +81,7 @@ class NewsDetailViewModelTest: XCTestCase {
         XCTAssertEqual(mockViewModel.newsTitle, "")
         XCTAssertEqual(mockViewModel.newsDesc, "")
         XCTAssertEqual(mockViewModel.newsUrl, "")
+        XCTAssertEqual(mockViewModel.source, "")
         
         mockViewModel.prepareContents()
         self.prepareContentsNilExp.fulfill()

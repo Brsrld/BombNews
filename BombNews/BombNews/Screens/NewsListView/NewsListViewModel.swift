@@ -43,15 +43,14 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
     }
     
     func prepareCellUIModel(model: Article) -> NewsCellUIModel {
-        guard let imageString = model.urlToImage,
-              let owner = model.source?.name,
+        guard let owner = model.source?.name,
               let title = model.title,
               let date = model.publishedAt else { return NewsCellUIModel(imageUrl: Constant.nilValue,
                                                                          owner: Constant.nilValue,
                                                                          title: Constant.nilValue,
                                                                          date: Constant.nilValue)}
         
-        return NewsCellUIModel(imageUrl: imageString,
+        return NewsCellUIModel(imageUrl: model.urlToImage ?? "",
                                owner: owner,
                                title:  title,
                                date: date.calculateTime())

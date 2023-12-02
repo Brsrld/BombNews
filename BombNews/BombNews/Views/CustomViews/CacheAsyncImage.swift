@@ -41,7 +41,7 @@ struct CacheAsyncImage<Content>: View where Content: View {
     
     private func cacheAndRender(phase: AsyncImagePhase, url: URL) -> some View {
         if case .success(let image) = phase {
-            ImageCache[url] = image.resizable()
+            ImageCache[url] = image
         }
         return content(phase)
     }
