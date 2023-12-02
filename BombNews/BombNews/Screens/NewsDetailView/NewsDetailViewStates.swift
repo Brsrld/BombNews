@@ -7,8 +7,8 @@
 
 import Foundation
 
+// MARK: - NewsDetailViewStates
 enum NewsDetailViewStates: ViewStateProtocol {
     case ready
     case web
-    case empty
 }

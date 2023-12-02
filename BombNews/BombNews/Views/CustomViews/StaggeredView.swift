@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - StaggeredGrid
 struct StaggeredGrid<Content: View,T:Hashable>: View{
     
     var content:(T) -> Content

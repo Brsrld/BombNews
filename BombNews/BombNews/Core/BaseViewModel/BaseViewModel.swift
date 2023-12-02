@@ -14,9 +14,7 @@ class BaseViewModel<E: ViewStateProtocol>: ObservableObject {
     
     func changeState(_ state: E) {
         DispatchQueue.main.async { [weak self] in
-            if self?.states == state {
-                debugPrint("Current state")
-            } else {
+            if self?.states != state {
                 self?.states = state
                 debugPrint("State changed to \(state)")
             }

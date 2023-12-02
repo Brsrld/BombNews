@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - NewsCell
 struct NewsCell: View {
     
     let item: NewsCellItem

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - NewsDetailViewModel
 final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
     
     var newsDetail: Article
@@ -21,9 +22,5 @@ final class NewsDetailViewModel: BaseViewModel<NewsDetailViewStates> {
     
     func changeNewsType() {
         changeState(newsType == .web ? .web : .ready)
-    }
-    
-    func emptyState() {
-        changeState(.empty)
     }
 }

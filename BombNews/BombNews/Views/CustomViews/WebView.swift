@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import WebKit
 
+// MARK: - WebView
 struct WebView: UIViewRepresentable {
     let url: String?
     @Binding var showLoading: Bool
@@ -36,6 +37,7 @@ struct WebView: UIViewRepresentable {
     }
 }
 
+// MARK: - WebViewCoordinator
 class WebViewCoordinator: NSObject, WKNavigationDelegate {
     
     var didStart: () -> Void

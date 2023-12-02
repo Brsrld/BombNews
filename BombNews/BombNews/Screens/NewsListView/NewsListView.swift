@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - NewsListView
 struct NewsListView: View {
     @ObservedObject private var viewModel: NewsListViewModel
     
@@ -53,6 +54,11 @@ struct NewsListView: View {
                                        description: Text("There is no news. You can use web search or refresh the page."))
             case .empty:
                 ContentUnavailableView.search
+                    .onChange(of: viewModel.searchQuery) {
+                        if viewModel.segmentValue == .localSearch {
+                            viewModel.filterData()
+                        }
+                    }
             }
         }
     }

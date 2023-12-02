@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - NewsListViewStates
 enum NewsListViewStates: ViewStateProtocol {
     case ready
     case loading

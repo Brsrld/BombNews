@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - NewsDetailView
 struct NewsDetailView: View {
     
     @ObservedObject private var viewModel: NewsDetailViewModel
@@ -35,8 +36,6 @@ struct NewsDetailView: View {
                 WebView(url: viewModel.newsDetail.url,
                         showLoading: $isloading)
                 .overlay(isloading ? ProgressView("Loading").toAnyView() : EmptyView().toAnyView())
-            case .empty:
-                ContentUnavailableView("Article does not have content", systemImage: "exclamationmark.circle")
             }
         }
     }

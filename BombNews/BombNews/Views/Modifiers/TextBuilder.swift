@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - TextBuilder
 struct TextBuilder: ViewModifier {
 
     let textColor: Color

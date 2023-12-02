@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - NewsListViewModel
 final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
     private var service: NewsListServiceable
     private var allNews: [Article]
@@ -29,16 +30,13 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
         fetchNews()
     }
     
-    func changeStateToEmpty() {
-        changeState(.empty)
-    }
-    
     func filterData() {
         if searchQuery.isEmpty {
             filteredNews = allNews
         } else {
             filteredNews = allNews.filter { $0.title?.lowercased().contains(searchQuery.lowercased()) == true }
         }
+        changeState(filteredNews.isEmpty ? .empty : .finished)
     }
     
     func checkValidation() {
@@ -59,10 +57,11 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
             self.changeState(.finished)
             switch result {
             case .success(let success):
-                guard let articles = success.articles else { return }
+                guard let articles = success.articles else { return self.changeState(.empty) }
                 DispatchQueue.main.async {
                     self.allNews = articles
                     self.filteredNews = articles
+                    self.changeState(articles.count == 0 ? .empty : .finished)
                 }
             case .failure(let failure):
                 self.changeState(.error)
@@ -84,6 +83,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
                 DispatchQueue.main.async {
                     self.allNews = articles
                     self.filteredNews = articles
+                    self.changeState(articles.count == 0 ? .empty : .finished)
                 }
             case .failure(let failure):
                 self.changeState(.error)

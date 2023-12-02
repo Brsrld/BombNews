@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - CacheAsyncImage
 struct CacheAsyncImage<Content>: View where Content: View {
     
     private let url: URL
@@ -44,6 +45,7 @@ struct CacheAsyncImage<Content>: View where Content: View {
     }
 }
 
+// MARK: - ImageCache
 fileprivate final class ImageCache {
     static private var cache: [URL: Image] = [:]
     

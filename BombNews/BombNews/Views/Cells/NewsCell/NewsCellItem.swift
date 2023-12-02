@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - NewsCellItem
 struct NewsCellItem {
     let imageUrl: String
     let owner: String

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - String
 extension String {
     func calculateTime() -> String {
         let dateFormatter = DateFormatter()

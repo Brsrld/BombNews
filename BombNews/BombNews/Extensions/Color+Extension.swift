@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - Color
 extension Color {
     static let cellColor = Color("CellColor")
     static let textColor = Color("TextColor")

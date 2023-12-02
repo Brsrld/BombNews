@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - NewsDetailTypes
 enum NewsDetailTypes: CaseIterable {
     case reader
     case web

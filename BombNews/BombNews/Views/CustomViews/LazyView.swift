@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - LazyView
 struct LazyView<Content: View>: View {
     
     private let build: () -> Content

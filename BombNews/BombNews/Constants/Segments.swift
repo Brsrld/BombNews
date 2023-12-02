@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Segments
 enum Segments: CaseIterable {
     case deepSearch
     case localSearch
