@@ -29,6 +29,11 @@ struct NewsListView: View {
         .searchable(text: $viewModel.searchQuery,
                     placement: .toolbar,
                     prompt: "Find or search news")
+        .onSubmit(of: .search) {
+            if viewModel.segmentValue == .deepSearch {
+                viewModel.checkValidation()
+            }
+        }
     }
     
     @ViewBuilder
@@ -68,11 +73,6 @@ struct NewsListView: View {
                     viewModel.filterData()
                 }
             }
-            .onSubmit(of: .search) {
-                if viewModel.segmentValue == .deepSearch {
-                    viewModel.checkValidation()
-                }
-            }
         }
     }
     
@@ -83,7 +83,7 @@ struct NewsListView: View {
                       showsIndicator: false,
                       spacing: 12) { news in
             NavigationLink {
-                LazyView(EmptyView())
+                LazyView(NewsDetailView(newsDetail: news))
             } label: {
                 NewsCell(item: NewsCellItem(imageUrl: news.urlToImage ?? "",
                                             owner: news.source?.name ?? "",

@@ -25,9 +25,9 @@ struct BaseView<Content: View, ViewState:ViewStateProtocol, VM: BaseViewModel<Vi
         }
         .alert(isPresented: $baseViewModel.showAlert) {
             Alert(
-                title: Text("Uyarı"),
+                title: Text("Warning"),
                 message: Text(baseViewModel.alertMessage),
-                dismissButton: .default(Text("Tamam"))
+                dismissButton: .default(Text("ok"))
             )
         }
     }
