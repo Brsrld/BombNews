@@ -73,8 +73,7 @@ extension HTTPClient {
                 return .failure(.unauthorized(code:response.statusCode))
             default:
                 debugPrint("Error >>>>>> \(String(describing: decodedResponse))")
-                return .failure(.unexpectedStatusCode(description: String(describing: decodedResponse),
-                                                      code: response.statusCode))
+                return .failure(.unexpectedStatusCode)
             }
         } catch {
             return .failure(.unknown(description: "Unknown error", code: nil))

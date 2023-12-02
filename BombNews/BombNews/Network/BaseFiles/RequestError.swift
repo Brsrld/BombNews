@@ -8,12 +8,12 @@
 import Foundation
 
 // MARK: - RequestError
-public enum RequestError: Error {
+public enum RequestError: Error, Equatable {
     case decode
     case invalidURL
     case noResponse
     case unauthorized(code:Int)
-    case unexpectedStatusCode(description: String, code: Int)
+    case unexpectedStatusCode
     case unknown(description: String, code: Int?)
     
     public var customMessage: String {
@@ -41,8 +41,8 @@ public enum RequestError: Error {
             return nil
         case .unauthorized(let code):
             return code
-        case .unexpectedStatusCode(_, let code):
-            return code
+        case .unexpectedStatusCode:
+            return nil
         case .unknown(_, let code):
             return code
         }

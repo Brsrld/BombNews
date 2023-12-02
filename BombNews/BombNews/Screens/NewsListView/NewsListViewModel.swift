@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - NewsListViewModel
 final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
-    private var service: NewsListServiceable
+    var service: NewsListServiceable
     private var allNews: [Article]
     
     @Published private(set) var filteredNews: [Article]
