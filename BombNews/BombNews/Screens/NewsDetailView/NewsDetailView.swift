@@ -51,7 +51,7 @@ struct NewsDetailView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .frame(height: 250)
+                        .frame(height: UIScreen.screenHeight / 4)
                 case .failure(_):
                    EmptyView()
                 @unknown default:
@@ -67,11 +67,11 @@ struct NewsDetailView: View {
             ,let desc = viewModel.newsDetail.description {
             
             Text(title)
-                .modifier(TextBuilder(textColor: .black,
+                .modifier(TextBuilder(textColor: .textColor,
                                       textFont: .title3,
                                       alingment: .center))
             Text(desc)
-                .modifier(TextBuilder(textColor: .gray,
+                .modifier(TextBuilder(textColor: .textColor,
                                       textFont: .subheadline,
                                       alingment: .leading))
                 .padding(.horizontal, 8)
@@ -98,7 +98,7 @@ struct NewsDetailView: View {
                 }
             }
             .pickerStyle(.segmented)
-            .frame(width: 250)
+            .frame(width: UIScreen.screenWidth / 1.5)
             .padding(.bottom, 8)
             .onChange(of: viewModel.newsType) {
                 viewModel.changeNewsType()

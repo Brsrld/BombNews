@@ -21,7 +21,7 @@ struct NewsCell: View {
             movieImage()
             textViews()
         }
-        .background(Color.white)
+        .background(Color.cellColor)
         .cornerRadius(8)
         .padding(.horizontal)
         .shadow(radius: 5)
@@ -35,7 +35,7 @@ struct NewsCell: View {
                       color: .gray,
                       footNote: .footnote)
                 label(text: item.title,
-                      color: .black,
+                      color: .textColor,
                       footNote: .subheadline)
                 label(text: item.date, 
                       color: .gray, 
@@ -79,14 +79,14 @@ struct NewsCell: View {
                     }
                 }
             }
-            .frame(height: isEmpty ? 0 : 100)
+            .frame(height: isEmpty ? 0 : UIScreen.screenHeight / 8)
         }
     }
 }
 
-//#Preview {
-//    NewsCell(item: NewsCellItem(imageUrl: "https://www.reuters.com/resizer/-9uubUtwVpA0QW9zWGHoxPLwhBk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/PW5QFB7KPVL4HLO3EMDE3LUJFM.jpg",
-//                                owner: "Reuters",
-//                                title: "French government rejects union demand to rethink pension bill - Reuters",
-//                                date: "2023-03-28T12:20:00Z".calculateTime()))
-//}
+#Preview {
+    NewsCell(item: NewsCellItem(imageUrl: "https://www.reuters.com/resizer/-9uubUtwVpA0QW9zWGHoxPLwhBk=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/PW5QFB7KPVL4HLO3EMDE3LUJFM.jpg",
+                                owner: "Reuters",
+                                title: "French government rejects union demand to rethink pension bill - Reuters",
+                                date: "2023-03-28T12:20:00Z".calculateTime()))
+}

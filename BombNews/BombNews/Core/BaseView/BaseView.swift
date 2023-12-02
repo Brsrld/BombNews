@@ -11,7 +11,7 @@ struct BaseView<Content: View, ViewState:ViewStateProtocol, VM: BaseViewModel<Vi
     
     @ObservedObject var baseViewModel: VM
     private let content: Content
-    private var bgColor: Color = .white
+    private var bgColor: Color = .cellColor
     
     init(viewModel: VM, @ViewBuilder content: () -> Content) {
         _baseViewModel = ObservedObject(wrappedValue: viewModel)

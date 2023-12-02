@@ -66,7 +66,7 @@ struct NewsListView: View {
                 }
             }
             .pickerStyle(.segmented)
-            .frame(width: 250)
+            .frame(width: UIScreen.screenWidth / 1.5)
             .padding(.bottom, 8)
             .onChange(of: viewModel.searchQuery) {
                 if viewModel.segmentValue == .localSearch {
@@ -79,7 +79,7 @@ struct NewsListView: View {
     @ViewBuilder
     private func newsList() -> some View {
         StaggeredGrid(list: viewModel.filteredNews,
-                      columns: 2,
+                      columns: UIScreen.screenWidth > 431.0 ? 3 : 2,
                       showsIndicator: false,
                       spacing: 12) { news in
             NavigationLink {
