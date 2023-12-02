@@ -30,7 +30,18 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
         fetchNews()
     }
     
-    func filterData() {
+    func search(isOnchange: Bool) {
+        switch segmentValue {
+        case .deepSearch:
+            if !isOnchange{
+                checkValidation()
+            }
+        case .localSearch:
+            filterData()
+        }
+    }
+    
+    private func filterData() {
         if searchQuery.isEmpty {
             filteredNews = allNews
         } else {
@@ -39,7 +50,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
         changeState(filteredNews.isEmpty ? .empty : .finished)
     }
     
-    func checkValidation() {
+    private func checkValidation() {
         if searchQuery.isValid() {
             changeState(.error)
             self.alertMessage = "Search string not valid"

@@ -17,7 +17,7 @@ enum NewsDetailTypes: CaseIterable {
         case .reader:
             return "Reader"
         case .web:
-            return "Web Reader"
+            return "Web"
         }
     }
 }

@@ -24,16 +24,11 @@ struct NewsListView: View {
         .onLoad {
             viewModel.serviceInitialize()
         }
-        .refreshable {
-            viewModel.serviceInitialize()
-        }
         .searchable(text: $viewModel.searchQuery,
                     placement: .toolbar,
                     prompt: "Find or search news")
         .onSubmit(of: .search) {
-            if viewModel.segmentValue == .deepSearch {
-                viewModel.checkValidation()
-            }
+            viewModel.search(isOnchange: false)
         }
     }
     
@@ -55,9 +50,7 @@ struct NewsListView: View {
             case .empty:
                 ContentUnavailableView.search
                     .onChange(of: viewModel.searchQuery) {
-                        if viewModel.segmentValue == .localSearch {
-                            viewModel.filterData()
-                        }
+                        viewModel.search(isOnchange: true)
                     }
             }
         }
@@ -75,9 +68,7 @@ struct NewsListView: View {
             .frame(width: UIScreen.screenWidth / 1.5)
             .padding(.bottom, 8)
             .onChange(of: viewModel.searchQuery) {
-                if viewModel.segmentValue == .localSearch {
-                    viewModel.filterData()
-                }
+                viewModel.search(isOnchange: true)
             }
         }
     }
@@ -97,6 +88,7 @@ struct NewsListView: View {
                                             date: news.publishedAt?.calculateTime() ?? ""))
             }
         }
+                      .padding(.top, 8)
     }
 }
 
