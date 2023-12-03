@@ -10,6 +10,7 @@ import Combine
 @testable import BombNews
 
 class NewsDetailViewModelTest: XCTestCase {
+    
     private var viewModel: NewsDetailViewModel!
     private let defaultExpectation = XCTestExpectation(description: "is default type")
     private let allTypesExpectation = XCTestExpectation(description: "all categories")

@@ -9,6 +9,7 @@ import Foundation
 @testable import BombNews
 
 final class MockHttpClient: NewsListServiceable {
+    
     let filename: String
     private let service: Mockable
     

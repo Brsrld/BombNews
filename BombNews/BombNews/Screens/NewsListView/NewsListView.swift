@@ -106,7 +106,10 @@ struct NewsListView: View {
         }
                       .padding(.top, Constant.viewsPadding)
     }
-    
+}
+
+// MARK: - NewsListView Extension
+extension NewsListView {
     private func calculateColumns() -> Int {
         return UIScreen.screenWidth > Constant.phoneScreenWidth ?
         Constant.threeColumns : Constant.twoColumns

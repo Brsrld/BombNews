@@ -16,6 +16,7 @@ struct NewsCell: View {
         static let bodySpacing: CGFloat = 12
         static let zeroValue: CGFloat = 0
         static let imageHeight: CGFloat = UIScreen.screenHeight / 8
+        static let emptyImageSystemImage: String  = "exclamationmark.circle"
     }
     
     private let item: NewsCellUIModel
@@ -77,7 +78,7 @@ struct NewsCell: View {
                     image
                         .resizable()
                 case .failure(_):
-                    EmptyView()
+                    Image(systemName: Constant.emptyImageSystemImage)
                 @unknown default:
                     fatalError()
                 }

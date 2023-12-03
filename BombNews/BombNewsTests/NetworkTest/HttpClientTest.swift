@@ -9,7 +9,7 @@ import Foundation
 @testable import BombNews
 import XCTest
 
-class HttpClientTest: XCTestCase{
+class HttpClientTest: XCTestCase {
     var urlSession: URLSession!
     var endpoint: Endpoint!
     var service: HTTPClientProtocol!

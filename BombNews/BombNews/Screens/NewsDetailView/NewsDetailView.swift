@@ -22,6 +22,7 @@ struct NewsDetailView: View {
         static let maxSizeImage: CGFloat = 3
         static let minSizeImage: CGFloat = 4
         static let segmentedIdentifier: String = "type"
+        static let imageIdentifier: String = "image"
     }
     
     @ObservedObject private var viewModel: NewsDetailViewModel
@@ -69,17 +70,12 @@ struct NewsDetailView: View {
                     .frame(height: calculateHeight())
                     .scaledToFit()
             case .failure(_):
-                EmptyView()
+                Image(systemName: Constant.emptyImageSystemImage)
             @unknown default:
                 fatalError()
             }
         }
-    }
-    
-    private func calculateHeight() -> CGFloat {
-        return UIScreen.screenHeight > Constant.screenMaxSize ?
-        UIScreen.screenHeight / Constant.maxSizeImage :
-        UIScreen.screenHeight / Constant.minSizeImage
+        .accessibilityIdentifier(Constant.imageIdentifier)
     }
     
     @ViewBuilder
@@ -120,6 +116,15 @@ struct NewsDetailView: View {
                 viewModel.changeNewsType()
             }
         }
+    }
+}
+
+// MARK: - NewsDetailView Extension
+extension NewsDetailView {
+    private func calculateHeight() -> CGFloat {
+        return UIScreen.screenHeight > Constant.screenMaxSize ?
+        UIScreen.screenHeight / Constant.maxSizeImage :
+        UIScreen.screenHeight / Constant.minSizeImage
     }
 }
 

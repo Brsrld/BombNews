@@ -10,6 +10,7 @@ import Combine
 @testable import BombNews
 
 class NewsListViewModelTest: XCTestCase {
+    
     private var viewModel: NewsListViewModel!
     private var cancellable: AnyCancellable?
     private var filename = "NewsResponse"
@@ -78,7 +79,6 @@ class NewsListViewModelTest: XCTestCase {
         viewModel.search(isOnchange: false)
        wait(for: [expectation.expectation], timeout: 1)
    }
-        //search error caseler yazilacak
     
     func test_localSearch_Success() {
         viewModel.searchQuery = "a"
