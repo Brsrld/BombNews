@@ -104,7 +104,8 @@ struct NewsListView: View {
     }
     
     private func calculateColumns() -> Int {
-        return UIScreen.screenWidth > Constant.phoneScreenWidth ? Constant.threeColumns : Constant.twoColumns
+        return UIScreen.screenWidth > Constant.phoneScreenWidth ?
+        Constant.threeColumns : Constant.twoColumns
     }
 }
 

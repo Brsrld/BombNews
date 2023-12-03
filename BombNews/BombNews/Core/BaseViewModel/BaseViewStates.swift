@@ -10,11 +10,3 @@ import Foundation
 protocol ViewStateProtocol: Equatable {
     static var ready: Self { get }
 }
-
-protocol ViewStatable: Equatable {
-    associatedtype ViewState: ViewStatable = DefaultViewState
-}
-
-enum DefaultViewState: ViewStateProtocol {
-    case ready
-}

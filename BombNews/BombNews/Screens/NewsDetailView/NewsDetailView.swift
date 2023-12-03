@@ -18,6 +18,9 @@ struct NewsDetailView: View {
         static let segmentedSpacing: CGFloat = 8
         static let segmentedWidth: CGFloat = UIScreen.screenWidth / 1.5
         static let segmentedString: String = ""
+        static let screenMaxSize: CGFloat = 933
+        static let maxSizeImage: CGFloat = 3
+        static let minSizeImage: CGFloat = 4
     }
     
     @ObservedObject private var viewModel: NewsDetailViewModel
@@ -73,9 +76,9 @@ struct NewsDetailView: View {
     }
     
     private func calculateHeight() -> CGFloat {
-        return UIScreen.screenHeight > 933 ?
-        UIScreen.screenHeight / 3 :
-        UIScreen.screenHeight / 4
+        return UIScreen.screenHeight > Constant.screenMaxSize ?
+        UIScreen.screenHeight / Constant.maxSizeImage :
+        UIScreen.screenHeight / Constant.minSizeImage
     }
     
     @ViewBuilder
@@ -88,7 +91,7 @@ struct NewsDetailView: View {
             .modifier(TextBuilder(textColor: .textColor,
                                   textFont: .subheadline,
                                   alingment: .leading))
-            .padding(.horizontal, 8)
+            .padding(.horizontal, Constant.segmentedSpacing)
     }
     
     private func reader() -> some View {

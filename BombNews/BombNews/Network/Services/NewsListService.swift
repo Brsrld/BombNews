@@ -20,6 +20,7 @@ struct NewsListService: NewsListServiceable {
     init(service: HTTPClientProtocol) {
         self.service = service
     }
+    
     func fetchSearchedNews(searchText: String) async -> Result<NewsResponse, RequestError> {
         return await service.sendRequest(endpoint: SearchNewsEndpoint(searchText: searchText), responseModel: NewsResponse.self)
     }

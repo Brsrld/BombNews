@@ -50,7 +50,7 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
                                                                          title: Constant.nilValue,
                                                                          date: Constant.nilValue)}
         
-        return NewsCellUIModel(imageUrl: model.urlToImage ?? "",
+        return NewsCellUIModel(imageUrl: model.urlToImage ?? Constant.nilValue,
                                owner: owner,
                                title:  title,
                                date: date.calculateTime())

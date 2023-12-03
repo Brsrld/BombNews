@@ -52,7 +52,9 @@ struct NewsCell: View {
         }
     }
     
-    private func label(text: String, color: Color, footNote: Font) -> some View {
+    private func label(text: String, 
+                       color: Color,
+                       footNote: Font) -> some View {
         HStack {
             Text(text)
                 .modifier(TextBuilder(textColor: color,
@@ -81,7 +83,8 @@ struct NewsCell: View {
                 }
             }
         }
-        .frame(height: item.imageUrl.isEmpty ? 0 : 100)
+        .frame(height: item.imageUrl.isEmpty ?
+               Constant.zeroValue : Constant.imageHeight)
     }
 }
 
