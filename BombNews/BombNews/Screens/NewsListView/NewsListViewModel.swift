@@ -17,12 +17,12 @@ final class NewsListViewModel: BaseViewModel<NewsListViewStates> {
     
     private var service: NewsListServiceable?
     private var allNews: [Article] = []
+    private(set) var segmentArray: [Segments] = Segments.allCases
     
     @Published private(set) var filteredNews: [Article] = []
     @Published var searchQuery: String = Constant.nilValue
     @Published var segmentValue: Segments = .localSearch
-    private(set) var segmentArray: [Segments] = Segments.allCases
-    
+   
     init(service: NewsListServiceable = NewsListService(service: HttpClient())) {
         self.service = service
     }

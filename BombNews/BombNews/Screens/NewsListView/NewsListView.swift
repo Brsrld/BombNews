@@ -24,6 +24,8 @@ struct NewsListView: View {
         static let phoneScreenWidth: CGFloat = 431
         static let twoColumns: Int = 2
         static let threeColumns: Int = 3
+        static let segmentedIdentifier: String = "search"
+        static let navigationLinkIdentifier: String = "detail"
     }
     
     @ObservedObject private var viewModel: NewsListViewModel
@@ -81,6 +83,7 @@ struct NewsListView: View {
                 }
             }
             .pickerStyle(.segmented)
+            .accessibilityIdentifier(Constant.segmentedIdentifier)
             .frame(width: Constant.segmentedWidth)
             .padding(.bottom, Constant.viewsPadding)
             .onChange(of: viewModel.searchQuery) {
@@ -99,6 +102,7 @@ struct NewsListView: View {
             } label: {
                 NewsCell(item: viewModel.prepareCellUIModel(model: news))
             }
+            .accessibilityIdentifier(Constant.navigationLinkIdentifier)
         }
                       .padding(.top, Constant.viewsPadding)
     }

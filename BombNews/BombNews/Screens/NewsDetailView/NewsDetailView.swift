@@ -21,6 +21,7 @@ struct NewsDetailView: View {
         static let screenMaxSize: CGFloat = 933
         static let maxSizeImage: CGFloat = 3
         static let minSizeImage: CGFloat = 4
+        static let segmentedIdentifier: String = "type"
     }
     
     @ObservedObject private var viewModel: NewsDetailViewModel
@@ -112,6 +113,7 @@ struct NewsDetailView: View {
                 }
             }
             .pickerStyle(.segmented)
+            .accessibilityIdentifier(Constant.segmentedIdentifier)
             .frame(width: Constant.segmentedWidth)
             .padding(.bottom, Constant.segmentedSpacing)
             .onChange(of: viewModel.newsType) {
